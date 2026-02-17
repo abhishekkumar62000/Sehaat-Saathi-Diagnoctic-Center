@@ -1,0 +1,1232 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Neon Theme -->
+    <link rel="stylesheet" href="{% static 'front/neon_theme.css' %}">
+
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/b8f054bdd1.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="{% static 'front/medical-checkup.png' %}"
+      type="image/png"
+    />
+
+    <title>Sehaat Saathi - AI Health Diagnosis</title>
+
+    <style>
+      #bg-image {
+        background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('{% static "front/new_home_bg.png" %}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 400px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        background-color: #001f3f;
+      }
+
+      @media (max-width: 768px) {
+        #bg-image {
+          min-height: 300px;
+          background-attachment: scroll;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #bg-image {
+          min-height: 200px;
+        }
+      }
+
+      /* Fix Dropdown Visibility for Neon Theme */
+      #dropdown1.dropdown-content {
+        background-color: #050505 !important;
+        border: 1px solid #00f3ff !important;
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.4) !important;
+        min-width: 250px;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      
+      #dropdown1.dropdown-content li {
+        background-color: #050505 !important;
+        min-height: 48px;
+        border-bottom: 1px solid #222;
+      }
+
+      #dropdown1.dropdown-content li > a {
+        color: #ffffff !important;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 14px 16px;
+        display: block;
+        transition: all 0.2s ease;
+      }
+
+      #dropdown1.dropdown-content li:hover {
+        background-color: #1a1a1a !important;
+      }
+
+      #dropdown1.dropdown-content li > a:hover {
+        color: #00f3ff !important;
+        padding-left: 24px;
+        background-color: transparent !important;
+      }
+
+      .diseases-grid {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+
+      img.responsive-img {
+        height: 200px;
+        object-fit: cover;
+      }
+
+      /* Banner Responsive */
+      .mobile-banner {
+        background: linear-gradient(135deg, #FF8C00 0%, #22C55E 100%);
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(255, 140, 0, 0.5);
+        margin-bottom: 2rem;
+        animation: slideInDown 0.5s ease-out;
+      }
+
+      .mobile-banner h2 {
+        color: white;
+        font-weight: bold;
+        margin: 0;
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        line-height: 1.3;
+      }
+
+      .mobile-banner p {
+        color: white;
+        margin: 10px 0 0 0;
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        opacity: 0.95;
+      }
+
+      .mobile-banner a {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 12px 30px;
+        background-color: white;
+        color: #FF8C00;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: clamp(0.9rem, 3vw, 1rem);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: pointer;
+        border: none;
+        transform: translateZ(0);
+      }
+
+      .mobile-banner a:hover {
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .mobile-banner a:active {
+        transform: scale(0.95);
+      }
+
+      @media (max-width: 600px) {
+        .mobile-banner {
+          padding: 1.25rem 1rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .mobile-banner h2 {
+          font-size: 1.3rem;
+        }
+
+        .mobile-banner p {
+          font-size: 0.95rem;
+        }
+
+        .mobile-banner a {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+
+      /* Ensure nav items are responsive */
+      nav ul {
+        margin: 0;
+      }
+
+      nav ul li {
+        padding: 0;
+        margin: 0;
+      }
+
+      /* Better spacing on mobile */
+      .nav-wrapper {
+        padding: 0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <!-- Dropdown Structure -->
+      <ul id="dropdown1" class="dropdown-content">
+        <li><a href="{% url 'alzheimer-predict' %}">Alzheimer</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'cancer-view' %}">Breast Cancer</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'brain-tumor-predict' %}">Brain Tumor</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'bmi-calculator' %}">BMI Calculator</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'covid-predict' %}">Covid-19</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'diabetes-view' %}">Diabetes</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'glaucoma-predict' %}">Glaucoma</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'heart-disease-view' %}">Heart Disease</a></li>
+        <li class="divider"></li>
+        <li><a href="">Kidney Tumor</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'liver-view' %}">Liver Disease</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'malaria-predict' %}">Malaria</a></li>
+      </ul>
+
+      <div class="navbar-fixed">
+        <nav>
+          <div class="nav-wrapper" style="padding: 0 15px;">
+            <a href="{% url 'index' %}" class="brand-logo" style="display: flex; align-items: center; height: 100%; text-decoration: none; font-size: clamp(1.2rem, 4vw, 1.8rem);">
+              <span style="font-family: 'Arial Black', 'Segoe UI', sans-serif; font-weight: 900; letter-spacing: 2px; white-space: nowrap;">
+                <span style="color: #FF8C00; display: inline-block; animation: glow-pulse-orange 2s ease-in-out infinite;">SEHAAT</span>
+                <span style="color: #22C55E; display: inline-block; margin-left: 8px; animation: glow-pulse-green 2s ease-in-out infinite;">SAATHI</span>
+              </span>
+            </a>
+            <a href="" class="sidenav-trigger right" data-target="mobile-links" style="padding: 0 15px;">
+              <i class="material-icons">menu</i>
+            </a>
+            <ul class="right hide-on-med-and-down" style="margin: 0;">
+              <li><a href="{% url 'index' %}">Home</a></li>
+              <li><a href="#about-team">About</a></li>
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+              {% endif %}
+              <li>
+                <a href="{% url 'features-hub' %}" style="font-weight: bold; color: #00f3ff;">Features Hub</a>
+              </li>
+              <li>
+                <a class="dropdown-trigger" href="#" data-target="dropdown1">
+                  Diseases <i class="material-icons right">arrow_drop_down</i>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'lab-analyzer' %}" class="btn" style="padding: 8px 15px; min-height: auto; border-color: #22C55E; color: #22C55E;">
+                  <i class="material-icons left">assignment</i>Lab
+                </a>
+              </li>
+              <li>
+                <a href="https://sehaat-saathi.vercel.app/" target="_blank" class="btn" 
+                   style="padding: 8px 15px; min-height: auto; border: 2px solid; background: linear-gradient(135deg, #FF8C00, #22C55E); border-color: #FF8C00; color: white; margin-left: 10px;">
+                  <i class="material-icons left">public</i>Live
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <ul class="sidenav" id="mobile-links">
+        <li><a href="{% url 'index' %}"><i class="material-icons left">home</i>Home</a></li>
+        <li><a href="#about-team"><i class="material-icons left">info</i>About</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'features-hub' %}"><i class="material-icons left">dashboard</i>Features Hub</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'lab-analyzer' %}"><i class="material-icons left">assignment</i>Lab Analyzer</a></li>
+        <li><a href="{% url 'know-your-disease' %}"><i class="material-icons left">local_hospital</i>Know Your Disease</a></li>
+        <li class="divider"></li>
+        <li><a href="https://sehaat-saathi.vercel.app/" target="_blank"><i class="material-icons left">public</i>Live Website</a></li>
+      </ul>
+
+      <section id="bg-image"></section>
+    </header>
+
+    <!-- Live Website Banner - Mobile Friendly -->
+    <div class="mobile-banner">
+      <h2>🌐 Visit Our Live Website!</h2>
+      <p>Complete AI-Powered Health Diagnosis Platform</p>
+      <a href="https://sehaat-saathi.vercel.app/" target="_blank">
+        🚀 Open Live Website
+      </a>
+    </div>
+
+    <div class="bg">
+      <div class="container diseases-grid">
+        <div class="row">
+          <div class="col s12 m4 pull-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/alzihmer.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> ALZHEIMER DISEASE DIAGNOSIS </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'alzheimer-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/cancer.webp' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> BREAST CANCER PREDICTION</span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'cancer-view' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4 push-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/brain tumor.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> BRAIN TUMOR DETECTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'brain-tumor-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m4 pull-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/bmi.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> BMI CALCULATOR </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'bmi-calculator' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/covid.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> COVID-19 PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'covid-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4 push-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/diabetes.png' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> DIABETES PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'diabetes-view' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m4 pull-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/glaucoma.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> GLAUCOMA PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'glaucoma-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/heart.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> HEART DISEASE PREDICTION</span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'heart-disease-view' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4 push-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/covid.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                  style="filter: hue-rotate(90deg);"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> PNEUMONIA DETECTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'pneumonia-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m4 pull-m1">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/liver.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> LIVER DISEASE PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'liver-view' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/malaria.jpg' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> MALARIA DISEASE PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'malaria-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="card hoverable">
+              <div class="card-image">
+                <img
+                  src="{% static 'front/kidney.png' %}"
+                  alt=""
+                  class="responsive-img"
+                />
+              </div>
+              <div class="card-content">
+                <span class="card-title"> KIDNEY DISEASE PREDICTION </span>
+              </div>
+              <div class="card-action">
+                <a
+                  href="{% url 'kidney-predict' %}"
+                  class="btn light-blue darken-4"
+                >
+                  Take Test
+                  <span> <i class="material-icons right"> send </i> </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Sehaat Saathi Section -->
+    <section id="about-sehaat" style="
+      background: linear-gradient(135deg, #0a0a0a 0%, #050505 50%, #0f0f0f 100%);
+      padding: 4rem 1rem;
+      border-top: 2px solid #00f3ff;
+      border-bottom: 2px solid #22C55E;
+      box-shadow: 0 0 30px rgba(0, 243, 255, 0.15) inset;
+    ">
+      <div class="container">
+        <!-- Main About Title -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+          <h2 style="
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: #00f3ff;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.6), 0 0 40px rgba(0, 243, 255, 0.3);
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+          ">
+            🏥 About <span style="color: #FF8C00;">Sehaat</span> <span style="color: #22C55E;">Saathi</span>
+          </h2>
+          <div style="
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C00, #00f3ff, #22C55E);
+            margin: 0 auto;
+            border-radius: 2px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+          "></div>
+        </div>
+
+        <!-- Main Description -->
+        <div style="
+          background: rgba(20, 20, 20, 0.7);
+          border: 1px solid #00f3ff;
+          border-radius: 15px;
+          padding: clamp(1.5rem, 5vw, 2.5rem);
+          margin-bottom: 3rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.05);
+        ">
+          <p style="
+            color: #ffffff;
+            font-size: clamp(1rem, 3vw, 1.15rem);
+            line-height: 1.8;
+            text-align: justify;
+            margin: 0;
+            letter-spacing: 0.5px;
+          ">
+            <strong style="color: #00f3ff; font-size: 1.1em;">Sehaatsaathi</strong> is an 
+            <strong style="color: #FF8C00;">AI-powered virtual health assistant</strong> designed for 
+            <strong style="color: #22C55E;">remote consultations, emergency healthcare, and personalized treatment.</strong>
+          </p>
+        </div>
+
+        <!-- Our Mission -->
+        <div style="
+          background: rgba(35, 197, 94, 0.1);
+          border-left: 4px solid #22C55E;
+          border-radius: 10px;
+          padding: clamp(1.5rem, 4vw, 2rem);
+          margin-bottom: 3rem;
+        ">
+          <h3 style="
+            color: #22C55E;
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+          ">
+            <i class="material-icons" style="font-size: 1.8em;">favorite</i>
+            Our Mission
+          </h3>
+          <p style="
+            color: #e0e0e0;
+            font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+            line-height: 1.7;
+            text-align: justify;
+            margin: 0;
+          ">
+            To provide quality, affordable, and accessible healthcare services to every individual through cutting-edge AI technology and compassionate care.
+          </p>
+        </div>
+
+        <!-- Features Grid -->
+        <h3 style="
+          text-align: center;
+          color: #00f3ff;
+          font-size: clamp(1.3rem, 4vw, 1.6rem);
+          margin-bottom: 2.5rem;
+          text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        ">
+          ✨ Our Advanced Features
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          
+          <!-- Feature 1 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #FF8C00;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(255, 140, 0, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #FF8C00; font-size: 1.8em;">smart_toy</i>
+              <h4 style="color: #FF8C00; margin: 0; font-size: 1.05rem;">AI Chatbot</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">AI-Powered Virtual Doctor Chatbot</strong> - Get instant medical guidance from our intelligent assistant.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #22C55E;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(34, 197, 94, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #22C55E; font-size: 1.8em;">diagnostic</i>
+              <h4 style="color: #22C55E; margin: 0; font-size: 1.05rem;">Diagnosis</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">AI Symptom Checker & Instant Diagnosis</strong> - Understand your symptoms instantly.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #00f3ff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(0, 243, 255, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #00f3ff; font-size: 1.8em;">local_pharmacy</i>
+              <h4 style="color: #00f3ff; margin: 0; font-size: 1.05rem;">Guidance</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Medicine Suggestions & First-Aid Guidance</strong> - Expert recommendations at your fingertips.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #bc13fe;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(188, 19, 254, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #bc13fe; font-size: 1.8em;">emergency</i>
+              <h4 style="color: #bc13fe; margin: 0; font-size: 1.05rem;">Emergency</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Emergency Ambulance Booking</strong> - Quick access to emergency services when needed.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #FF8C00;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(255, 140, 0, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #FF8C00; font-size: 1.8em;">videocall</i>
+              <h4 style="color: #FF8C00; margin: 0; font-size: 1.05rem;">Consultation</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Instant Video Call Doctor Consultation</strong> - Connect with doctors face-to-face instantly.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #22C55E;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(34, 197, 94, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #22C55E; font-size: 1.8em;">calendar_today</i>
+              <h4 style="color: #22C55E; margin: 0; font-size: 1.05rem;">Appointments</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Offline Doctor Slot Booking (All Specialties)</strong> - Book appointments at your convenience.
+            </p>
+          </div>
+
+          <!-- Feature 7 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #00f3ff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(0, 243, 255, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #00f3ff; font-size: 1.8em;">shopping_cart</i>
+              <h4 style="color: #00f3ff; margin: 0; font-size: 1.05rem;">Pharmacy</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Medicine Ordering & Lab Test Booking</strong> - Get medicines and tests delivered to your home.
+            </p>
+          </div>
+
+          <!-- Feature 8 -->
+          <div style="
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #bc13fe;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+          " onmouseover="this.style.boxShadow='0 0 25px rgba(188, 19, 254, 0.4)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <i class="material-icons" style="color: #bc13fe; font-size: 1.8em;">description</i>
+              <h4 style="color: #bc13fe; margin: 0; font-size: 1.05rem;">Records</h4>
+            </div>
+            <p style="color: #d0d0d0; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+              <strong style="color: #ffffff;">Health Records & Reminders</strong> - Keep track of your medical history and medication schedules.
+            </p>
+          </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="
+          text-align: center;
+          background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(34, 197, 94, 0.15));
+          border: 1px solid rgba(0, 243, 255, 0.3);
+          border-radius: 15px;
+          padding: 2.5rem 1.5rem;
+          margin-top: 3rem;
+          margin-bottom: 3rem;
+        ">
+          <h4 style="
+            color: #ffffff;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            margin: 0 0 1.5rem 0;
+          ">
+            Start Your Journey to Better Health Today! 🚀
+          </h4>
+          <a href="{% url 'features-hub' %}" style="
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #FF8C00, #22C55E);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+            border: 2px solid #FF8C00;
+          " onmouseover="this.style.boxShadow='0 6px 25px rgba(255, 140, 0, 0.6)'; this.style.transform='scale(1.05)'" onmouseout="this.style.boxShadow='0 4px 15px rgba(255, 140, 0, 0.4)'; this.style.transform='scale(1)'">
+            Explore All Features →
+          </a>
+        </div>
+
+        <!-- Platform Links Section -->
+        <h3 style="
+          text-align: center;
+          color: #00f3ff;
+          font-size: clamp(1.3rem, 4vw, 1.6rem);
+          margin-bottom: 2.5rem;
+          text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        ">
+          🌐 Visit Our Platforms
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+          
+          <!-- Platform Card 1: Main Website -->
+          <a href="https://sehaat-saathi.vercel.app/" target="_blank" style="
+            text-decoration: none;
+            display: block;
+            height: 100%;
+          ">
+            <div style="
+              background: linear-gradient(135deg, #D4AF37 0%, #90C695 50%, #4CAF50 100%);
+              border-radius: 15px;
+              padding: 2rem 1.5rem;
+              text-align: center;
+              transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              height: 100%;
+              box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
+            " onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 35px rgba(212, 175, 55, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 20px rgba(212, 175, 55, 0.3)'">
+              
+              <div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.2), transparent 50%);
+                pointer-events: none;
+              "></div>
+
+              <div style="position: relative; z-index: 1;">
+                <img src="{% static 'front/SehaatSaathi.png' %}" alt="Sehaat Saathi Logo" style="
+                  height: 70px;
+                  width: auto;
+                  margin-bottom: 1.5rem;
+                  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+                  transition: all 0.3s ease;
+                ">
+                
+                <h3 style="
+                  color: white;
+                  margin: 0 0 0.75rem 0;
+                  font-size: clamp(1.3rem, 4vw, 1.8rem);
+                  font-weight: bold;
+                  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                ">
+                  Sehaat Saathi Website
+                </h3>
+
+                <p style="
+                  color: rgba(255, 255, 255, 0.95);
+                  margin: 0 0 1.5rem 0;
+                  font-size: clamp(0.9rem, 2.5vw, 1rem);
+                  font-weight: 500;
+                  line-height: 1.6;
+                ">
+                  Complete AI-Powered Health Diagnosis Platform
+                </p>
+
+                <div style="
+                  display: inline-block;
+                  padding: 12px 30px;
+                  background-color: white;
+                  color: #D4AF37;
+                  text-decoration: none;
+                  border-radius: 30px;
+                  font-weight: bold;
+                  font-size: clamp(0.9rem, 2.5vw, 1rem);
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                  transition: all 0.3s ease;
+                  border: 2px solid white;
+                ">
+                  🚀 Open Website
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Platform Card 2: AI Chatbot -->
+          <a href="https://sehaat-saathi-your-ai-doctor-chatbot.streamlit.app/" target="_blank" style="
+            text-decoration: none;
+            display: block;
+            height: 100%;
+          ">
+            <div style="
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+              border-radius: 15px;
+              padding: 2rem 1.5rem;
+              text-align: center;
+              transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              height: 100%;
+              box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
+            " onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 35px rgba(102, 126, 234, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 20px rgba(102, 126, 234, 0.3)'">
+              
+              <div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.2), transparent 50%);
+                pointer-events: none;
+              "></div>
+
+              <div style="position: relative; z-index: 1;">
+                <img src="{% static 'front/SehaatSaathi.png' %}" alt="Sehaat Saathi Logo" style="
+                  height: 70px;
+                  width: auto;
+                  margin-bottom: 1.5rem;
+                  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+                  transition: all 0.3s ease;
+                ">
+                
+                <h3 style="
+                  color: white;
+                  margin: 0 0 0.75rem 0;
+                  font-size: clamp(1.3rem, 4vw, 1.8rem);
+                  font-weight: bold;
+                  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                ">
+                  AI Doctor Chatbot
+                </h3>
+
+                <p style="
+                  color: rgba(255, 255, 255, 0.95);
+                  margin: 0 0 1.5rem 0;
+                  font-size: clamp(0.9rem, 2.5vw, 1rem);
+                  font-weight: 500;
+                  line-height: 1.6;
+                ">
+                  Your AI-Powered Virtual Doctor Assistant
+                </p>
+
+                <div style="
+                  display: inline-block;
+                  padding: 12px 30px;
+                  background-color: white;
+                  color: #667eea;
+                  text-decoration: none;
+                  border-radius: 30px;
+                  font-weight: bold;
+                  font-size: clamp(0.9rem, 2.5vw, 1rem);
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                  transition: all 0.3s ease;
+                  border: 2px solid white;
+                ">
+                  💬 Chat Now
+                </div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="about-team" class="page-footer scrollspy" style="background: linear-gradient(135deg, #050505 0%, #1a1a1a 100%); border-top: 1px solid #00f3ff; box-shadow: 0 -5px 20px rgba(0, 243, 255, 0.2);">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m6">
+            <h4 style="color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); font-weight: bold;">
+              <i class="material-icons left" style="font-size: 2.5rem;">health_and_safety</i> 
+              About Sehaat Saathi
+            </h4>
+            <p style="color: #e0e0e0; font-size: 1.1rem; line-height: 1.6; text-align: justify;">
+              Sehaat Saathi is an advanced <strong>AI-powered Health Guardian</strong> designed to bridge the gap between patients and medical diagnostics. 
+              Using state-of-the-art Deep Learning models, we analyze symptoms and medical imaging (X-Ray/MRI) to provide preliminary disease risk assessments immediately.
+            </p>
+          </div>
+          <div class="col s12 m6">
+            <h4 style="color: #FF8C00; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5); font-weight: bold;">
+              <i class="material-icons left" style="font-size: 2.5rem;">lightbulb_outline</i>
+              Why We Exist?
+            </h4>
+            <p style="color: #e0e0e0; font-size: 1.1rem; line-height: 1.6; text-align: justify;">
+              In a post-pandemic world, hospital visits carry risks. We empower you to:
+            </p>
+            <ul style="color: #fff; font-size: 1.05rem;">
+                <li style="margin-bottom: 10px;"><i class="material-icons tiny" style="color: #00f3ff; margin-right: 8px;">check_circle</i> <strong>Screen Properly:</strong> Understand symptoms from home.</li>
+                <li style="margin-bottom: 10px;"><i class="material-icons tiny" style="color: #00f3ff; margin-right: 8px;">check_circle</i> <strong>Consult Smartly:</strong> Use our Dr. AI Chatbot for instant guidance.</li>
+                <li style="margin-bottom: 10px;"><i class="material-icons tiny" style="color: #00f3ff; margin-right: 8px;">check_circle</i> <strong>Stay Safe:</strong> Reduce unnecessary exposure using virtual triage.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright" style="background-color: #000; border-top: 1px solid #333;">
+        <div class="container center-align" style="color: #888;">
+            &copy; {% now "Y" %} Sehaat Saathi. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize Materialize components
+        $(".dropdown-trigger").dropdown({
+            coverTrigger: false,
+            constrainWidth: false,
+            alignment: 'right'
+        });
+        
+        // Initialize sidenav with smooth animations
+        const sidenav = $(".sidenav").sidenav({
+            edge: 'left',
+            draggable: true,
+            inDuration: 250,
+            outDuration: 200
+        });
+        
+        // Close sidenav when link clicked
+        $(".sidenav a").on("click", function() {
+            sidenav.sidenav('close');
+        });
+        
+        // Initialize tooltips
+        $(".tooltipped").tooltip({
+            margin: 0,
+            enterDelay: 200
+        });
+        
+        // Smooth scroll for anchor links
+        $("a[href^='#']").on("click", function(e) {
+            e.preventDefault();
+            const target = $(this.getAttribute('href'));
+            if (target.length) {
+                $('html, body').stop().animate({
+                    scrollTop: target.offset().top - 64
+                }, 800, 'easeInOutQuad');
+            }
+        });
+
+        // Add ripple effect to cards on mobile
+        if (window.innerWidth <= 768) {
+            $(".card").on("click", function() {
+                $(this).addClass("ripple-effect");
+                setTimeout(() => $(this).removeClass("ripple-effect"), 300);
+            });
+        }
+
+        // Lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            $('img.lazy').each(function() {
+                imageObserver.observe(this);
+            });
+        }
+
+        // Add animation to cards on scroll
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInUp 0.6s ease-out forwards';
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        $(".card").each(function() {
+            cardObserver.observe(this);
+        });
+
+        // Handle active navigation
+        const currentPage = window.location.pathname;
+        $("nav a").each(function() {
+            if ($(this).attr('href') === currentPage) {
+                $(this).addClass('active');
+            }
+        });
+
+        // Add loading animation to buttons
+        $(".btn").on("click", function(e) {
+            if (!$(this).attr('data-loading')) {
+                $(this).attr('data-loading', 'true');
+                setTimeout(() => {
+                    $(this).removeAttr('data-loading');
+                }, 1000);
+            }
+        });
+
+        // Improve form inputs
+        $("input, textarea, select").on("focus", function() {
+            $(this).parent().addClass("focused");
+        }).on("blur", function() {
+            if (!$(this).val()) {
+                $(this).parent().removeClass("focused");
+            }
+        });
+
+        // Handle nav dropdown on mobile
+        $(".dropdown-trigger").on("click", function(e) {
+            if (window.innerWidth <= 768) {
+                e.stopPropagation();
+            }
+        });
+
+        // Improve touch targets on mobile
+        if (window.innerWidth <= 600) {
+            $(".btn, a, button").css({
+                'min-height': '48px',
+                'line-height': '48px',
+                'padding': '12px 24px'
+            });
+        }
+      });
+
+      // Handle window resize for responsive changes
+      $(window).on('resize', function() {
+          // Adjust layout on resize if needed
+      });
+
+      // Add animation classes to ensure smooth transitions
+      document.addEventListener('DOMContentLoaded', function() {
+          // Animate heading on load
+          const heading = document.querySelector('.mobile-banner h2');
+          if (heading) {
+              heading.style.animation = 'slideInDown 0.5s ease-out';
+          }
+      });
+    </script>
+    
+    <!-- Chatbot Widget -->
+    {% include 'chat_widget.html' %}
+  </body>
+</html>

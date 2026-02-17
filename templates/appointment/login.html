@@ -1,0 +1,29 @@
+{% extends "header.html" %}
+
+{% block content %}      
+
+{% load crispy_forms_tags %}
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card glass-card p-4" style="max-width: 450px; width: 100%;">
+    <div class="card-header text-center border-0">
+        <h1 class="neon-text mb-0">Login</h1>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ login_form|crispy }}
+        </div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg" type="submit">LOGIN</button>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer text-center border-0 mt-3">
+        <p class="text-light">Don't have an account? <br><a href="{% url 'register' %}" class="text-info fw-bold" style="text-decoration: none;">Create an Account</a></p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

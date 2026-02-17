@@ -1,0 +1,232 @@
+<style>
+    /* Chat Widget Styles */
+    #chat-widget-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+        background-color: #111;
+        border: 1px solid #00f3ff;
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        z-index: 1000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
+    }
+
+    #chat-header {
+        background: linear-gradient(90deg, #00f3ff, #00addc);
+        color: #000;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        font-weight: bold;
+    }
+
+    #chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #050505;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .message {
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 80%;
+        line-height: 1.4;
+        font-size: 0.95rem;
+    }
+
+    .bot-message {
+        background-color: #1a1a1a;
+        color: #fff;
+        border: 1px solid #333;
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+    }
+
+    .user-message {
+        background-color: transparent;
+        border: 1px solid #00f3ff;
+        color: #00f3ff;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+        box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+    }
+
+    #chat-input-area {
+        padding: 15px;
+        border-top: 1px solid #333;
+        display: flex;
+        gap: 10px;
+        background-color: #111;
+    }
+
+    #chat-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #333;
+        background: #000;
+        color: #fff;
+        border-radius: 20px;
+        outline: none;
+    }
+    
+    #chat-input:focus {
+        border-color: #00f3ff;
+        box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    }
+
+    #chat-send-btn {
+        background-color: #00f3ff;
+        color: #000;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    #chat-toggle-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #00f3ff;
+        color: #000;
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+        cursor: pointer;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        transition: transform 0.3s;
+    }
+
+    #chat-toggle-btn:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<!-- Floating Toggle Button -->
+<button id="chat-toggle-btn" onclick="toggleChat()">
+    💬
+</button>
+
+<!-- Main Chat Window -->
+<div id="chat-widget-container">
+    <div id="chat-header">
+        <span>🩺 Sehaat Saathi AI</span>
+        <span style="cursor: pointer;" onclick="toggleChat()">✖</span>
+    </div>
+    <div id="chat-messages">
+        <div class="message bot-message">
+            Hello! I am Dr. AI from Sehaat Saathi. I've reviewed your <strong>{{ chat_disease }}</strong> results. 
+            How can I help you?
+        </div>
+    </div>
+    <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask Sehaat Saathi AI..." onkeypress="handleKeyPress(event)">
+        <button id="chat-send-btn" onclick="sendMessage()">➤</button>
+    </div>
+</div>
+
+<script>
+    // Context from Django Template
+    const chatContext = {
+        disease: "{{ chat_disease|default:'General' }}",
+        result: "{{ chat_result|default:'Unknown' }}",
+        data: "{{ chat_data|default:'' }}"
+    };
+
+    function toggleChat() {
+        const chatWindow = document.getElementById('chat-widget-container');
+        const toggleBtn = document.getElementById('chat-toggle-btn');
+        
+        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+            chatWindow.style.display = 'flex';
+            toggleBtn.style.display = 'none';
+        } else {
+            chatWindow.style.display = 'none';
+            toggleBtn.style.display = 'flex';
+        }
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const messagesDiv = document.getElementById('chat-messages');
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        // Add User Message
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.textContent = text;
+        messagesDiv.appendChild(userDiv);
+        
+        // Clear input
+        input.value = '';
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        // Show loading state
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot-message';
+        loadingDiv.textContent = 'Thinking...';
+        loadingDiv.id = 'loading-msg';
+        messagesDiv.appendChild(loadingDiv);
+
+        // Send to Backend
+        fetch('/chat-api/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                message: text,
+                context: chatContext
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Remove loading
+            document.getElementById('loading-msg').remove();
+
+            // Add Bot Response
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.textContent = data.response;
+            messagesDiv.appendChild(botDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('loading-msg').textContent = 'Sorry, I realized I cannot connect right now.';
+        });
+    }
+</script>

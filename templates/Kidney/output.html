@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kidney Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'front/neon_theme.css' %}">
+</head>
+<body>
+    <div class="container mt-5 text-center">
+        {% if pred == 1 %}
+            <div class="mb-4">
+                <img src="{% static 'front/medical-checkup.png' %}" width="150" style="filter: drop-shadow(0 0 10px #f00);">
+            </div>
+            <h1 class="text-danger mb-3">Result: High Probability of Chronic Kidney Disease</h1>
+            <p class="lead text-light">We recommend consulting a nephrologist immediately for further tests.</p>
+        {% else %}
+            <div class="mb-4">
+                <img src="{% static 'front/medical-checkup.png' %}" width="150" style="filter: drop-shadow(0 0 10px #0f0);">
+            </div>
+            <h1 class="text-success mb-3">Result: Kidney Health Looks Normal</h1>
+            <p class="lead text-light">No strong indicators of CKD were found based on input data.</p>
+        {% endif %}
+
+        <div class="mt-5">
+            <a href="{% url 'index' %}" class="btn btn-primary me-2">Home</a>
+            <a href="{% url 'kidney-predict' %}" class="btn btn-outline-info">Test Again</a>
+        </div>
+    </div>
+
+    {% include 'chat_widget.html' %}
+</body>
+</html>

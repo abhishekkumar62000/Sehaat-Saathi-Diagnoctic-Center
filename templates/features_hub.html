@@ -1,0 +1,138 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">Smart Health Hub</h1>
+        <p class="lead text-muted">Advanced AI-powered tools to manage your health & wellness.</p>
+        <hr class="w-25 mx-auto text-primary" style="height: 3px; opacity: 1;">
+    </div>
+
+    <div class="row g-4">
+        <!-- Feature 1: Lab Analyzer -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card" style="border-radius: 20px; transition: transform 0.3s;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4 text-success">
+                        <i class="fas fa-file-medical-alt fa-5x"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">Smart Lab Analyzer</h3>
+                    <p class="card-text text-muted my-3">
+                        Don't understand your medical report? Enter your values (blood, lipids, etc.) and get an instant, easy-to-understand interpretation with actionable advice.
+                    </p>
+                    <a href="{% url 'lab-analyzer' %}" class="btn btn-success btn-lg rounded-pill px-5 shadow-sm">
+                        Analyze Report <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 2: Health Roadmap (New) -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card" style="border-radius: 20px; transition: transform 0.3s;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4 text-primary">
+                        <i class="fas fa-calendar-alt fa-5x"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">7-Day Health Roadmap</h3>
+                    <p class="card-text text-muted my-3">
+                        Get a fully personalized diet and exercise plan tailored to your body type and goals. Download your weekly roadmap as a PDF.
+                    </p>
+                    <a href="{% url 'roadmap-view' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                        Create Roadmap <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 3: Mood & Mind Tracker -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card" style="border-radius: 20px; transition: transform 0.3s;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4 text-info">
+                        <i class="fas fa-brain fa-5x"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">Mood & Mind Tracker</h3>
+                    <p class="card-text text-muted my-3">
+                        Mental health matters. Journal your thoughts and receive instant, AI-driven supportive sentiment analysis and advice.
+                    </p>
+                    <a href="{% url 'mood-tracker' %}" class="btn btn-info btn-lg rounded-pill px-5 shadow-sm text-white">
+                        Track Mood <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 4: Medical Passport -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card" style="border-radius: 20px; transition: transform 0.3s;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4 text-danger">
+                        <i class="fas fa-id-card-alt fa-5x"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">Emergency Medical Passport</h3>
+                    <p class="card-text text-muted my-3">
+                        Travel safely. Create a secure QR code containing your vital medical info (blood type, allergies) for scanning in emergencies.
+                    </p>
+                    <a href="{% url 'medical-passport' %}" class="btn btn-danger btn-lg rounded-pill px-5 shadow-sm">
+                        Create Passport <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature 5: Dr. AI Voice Assistant -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card bg-dark text-white" style="border-radius: 20px; transition: transform 0.3s; border: 1px solid #00ff88;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4 text-success">
+                        <i class="fas fa-microphone-alt fa-5x" style="text-shadow: 0 0 10px #00ff88;"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">Dr. AI Voice Assistant</h3>
+                    <p class="card-text text-light my-3">
+                        Interactive "Jarvis" mode. Speak your symptoms and hear the AI doctor's advice in real-time. Accessible and futuristic.
+                    </p>
+                    <a href="{% url 'voice-doctor' %}" class="btn btn-outline-success btn-lg rounded-pill px-5 shadow-sm">
+                        Speak to Dr. AI <i class="fas fa-wave-square ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 6: PharmaWise Interaction Checker -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow border-0 hover-card" style="border-radius: 20px; transition: transform 0.3s;">
+                <div class="card-body text-center p-5">
+                    <div class="icon-box mb-4" style="color: #6f42c1;">
+                        <i class="fas fa-capsules fa-5x"></i>
+                    </div>
+                    <h3 class="card-title fw-bold">PharmaWise Check</h3>
+                    <p class="card-text text-muted my-3">
+                        Prevent dangerous drug cocktails. Instantly check if two medications (e.g. Aspirin & Ibuprofen) interact negatively.
+                    </p>
+                    <a href="{% url 'pharma-check' %}" class="btn btn-lg rounded-pill px-5 shadow-sm text-white" style="background-color: #6f42c1;">
+                        Check Safety <i class="fas fa-check-double ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+             <div class="card shadow-sm border-0 bg-light p-4" style="border-radius: 15px;">
+                 <h5 class="text-muted"><i class="fas fa-rocket me-2"></i>More features coming soon!</h5>
+                 <p class="small mb-0">We are constantly updating Sehaat Saathi with new AI capabilities.</p>
+             </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .hover-card:hover {
+        transform: translateY(-10px);
+    }
+</style>
+{% endblock %}

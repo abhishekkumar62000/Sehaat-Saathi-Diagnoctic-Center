@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @frame footer_frame {
+                -pdf-frame-content: footerContent;
+                bottom: 1cm;
+                left: 2cm;
+                width: 17cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 12pt;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #00f3ff;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #000;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 10pt;
+        }
+        .meta-info {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            background-color: #f0f0f0;
+            padding: 8px;
+            font-weight: bold;
+            border-left: 5px solid #00f3ff;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f9f9f9;
+        }
+        .result-badge {
+            font-weight: bold;
+        }
+        .danger { color: red; }
+        .success { color: green; }
+        
+        #footerContent {
+            text-align: center;
+            font-size: 9pt;
+            color: #aaa;
+        }
+        .disclaimer {
+            font-size: 8pt;
+            color: #888;
+            margin-top: 50px;
+            text-align: justify;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sehaat Saathi</h1>
+        <p>Comprehensive Medical Prediction Report</p>
+        <p>Date: {% now "F j, Y" %}</p>
+    </div>
+
+    <table class="meta-info">
+        <tr>
+            <td><strong>Patient Name:</strong> {{ user.username }}</td>
+            <td><strong>Email:</strong> {{ user.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Report ID:</strong> #PRED-{{ user.id }}-{% now "U" %}</td>
+            <td><strong>Generated:</strong> {% now "H:i T" %}</td>
+        </tr>
+    </table>
+
+    <!-- Diabetes Section -->
+    {% if diabetes_records %}
+    <div class="section-title">Diabetes Analysis History</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Glucose</th>
+                <th>BMI</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in diabetes_records|slice:":5" %}
+            <tr>
+                <td>{{ record.date|date:"M d, Y" }}</td>
+                <td>{{ record.glucose }} mg/dL</td>
+                <td>{{ record.bmi }}</td>
+                <td class="result-badge {% if 'Diabetic' in record.prediction %}danger{% else %}success{% endif %}">
+                    {{ record.prediction }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Heart Section -->
+    {% if heart_records %}
+    <div class="section-title">Cardiac Health History</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Resting BP</th>
+                <th>Cholesterol</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in heart_records|slice:":5" %}
+            <tr>
+                <td>{{ record.date|date:"M d, Y" }}</td>
+                <td>{{ record.resting_bp }} mmHg</td>
+                <td>{{ record.cholesterol }} mg/dL</td>
+                <td class="result-badge {% if 'High' in record.prediction %}danger{% else %}success{% endif %}">
+                    {{ record.prediction }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Image Analysis Section -->
+    {% if image_records %}
+    <div class="section-title">Imaging Analysis</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Scan Type</th>
+                <th>AI Finding</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in image_records|slice:":5" %}
+            <tr>
+                <td>{{ record.date|date:"M d, Y" }}</td>
+                <td>{{ record.disease_type }}</td>
+                <td>{{ record.prediction }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This report is generated by an Artificial Intelligence system for informational purposes only. It is NOT a medical diagnosis. Please consult a declared medical professional for accurate diagnosis and treatment.
+    </div>
+
+    <div id="footerContent">
+        Generated by Sehaat Saathi - Page <pdf:pagenumber>
+    </div>
+</body>
+</html>

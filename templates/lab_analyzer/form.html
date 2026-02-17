@@ -1,0 +1,76 @@
+{% extends 'header.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
+                    <h3><i class="fas fa-microscope"></i> Smart Lab Report Analyzer</h3>
+                    <p class="mb-0">Enter your values to get a layman's summary of your health.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <h5 class="mb-3 text-secondary border-bottom pb-2">Patient Details</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.age|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Gender*</label><br>
+                                {% for radio in form.gender %}
+                                    <div class="form-check form-check-inline">
+                                        {{ radio }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3 text-secondary border-bottom pb-2 mt-4">Blood Test Results</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.hemoglobin|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.wbc|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.platelets|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3 text-secondary border-bottom pb-2 mt-4">Metabolic Panel</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.glucose_fasting|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.cholesterol|as_crispy_field }}
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-md-6">
+                                {{ form.creatinine|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow">
+                                <i class="fas fa-magic"></i> Analyze My Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. AI | Voice Assistant</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000;
+            color: #0ff;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .voice-interface {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* Pulse Animation for the mic */
+        .mic-btn-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .mic-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #0ff;
+            color: #0ff;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+        
+        .mic-btn:hover {
+            box-shadow: 0 0 30px #0ff;
+            background: rgba(0, 255, 255, 0.2);
+        }
+        
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #0ff;
+            opacity: 0;
+            animation: none;
+        }
+        
+        .listening .pulse-ring {
+            animation: pulse-wave 2s infinite;
+        }
+        
+        @keyframes pulse-wave {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        
+        .status-text {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            min-height: 40px;
+        }
+        
+        .transcript-box {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            min-height: 100px;
+            color: #aaa;
+            font-style: italic;
+        }
+        
+        .response-box {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #0ff;
+            border-radius: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            max-width: 800px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="p-3">
+        <a href="{% url 'features-hub' %}" class="btn btn-outline-info btn-sm rounded-pill"><i class="fas fa-arrow-left me-2"></i>Exit Dr. AI</a>
+    </div>
+
+    <div class="voice-interface">
+        <h1 class="orbitron text-center display-4 mb-5" style="text-shadow: 0 0 20px cyan;">Dr. AI <small class="fs-6 text-muted">VOICE CORE</small></h1>
+        
+        <div class="mic-btn-container" id="micContainer">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring" style="animation-delay: 0.5s"></div>
+            <button class="mic-btn" id="micBtn" onclick="toggleListening()">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+        
+        <div class="status-text orbitron" id="statusText">Tap Mic to Speak</div>
+        
+        <div class="transcript-box" id="transcript"></div>
+        
+        <div class="response-box" id="responseBox">
+            <h5 class="orbitron text-white">Analysis:</h5>
+            <p id="responseText" class="lead text-white"></p>
+        </div>
+    </div>
+
+    <script>
+        // Check browser support
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Sorry, your browser doesn't support Voice API. Try Chrome/Edge.");
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = true;
+
+        const synth = window.speechSynthesis;
+        const micBtn = document.getElementById('micBtn');
+        const micContainer = document.getElementById('micContainer');
+        const statusText = document.getElementById('statusText');
+        const transcriptDiv = document.getElementById('transcript');
+        const responseBox = document.getElementById('responseBox');
+        const responseText = document.getElementById('responseText');
+
+        let isListening = false;
+
+        recognition.onstart = function() {
+            isListening = true;
+            micContainer.classList.add('listening');
+            micBtn.style.color = '#ff0055';
+            micBtn.style.borderColor = '#ff0055';
+            statusText.innerText = "Listening...";
+            statusText.style.color = '#ff0055';
+            transcriptDiv.innerText = "";
+            responseBox.style.display = 'none';
+        };
+
+        recognition.onend = function() {
+            isListening = false;
+            micContainer.classList.remove('listening');
+            micBtn.style.color = '#0ff';
+            micBtn.style.borderColor = '#0ff';
+            statusText.innerText = "Processing...";
+            statusText.style.color = '#0ff';
+            
+            // If we have a final transcript, send to AI
+            const finalQuery = transcriptDiv.innerText;
+            if (finalQuery.trim().length > 0) {
+                fetchHealthAdvice(finalQuery);
+            } else {
+                statusText.innerText = "Tap Mic to Speak";
+            }
+        };
+
+        recognition.onresult = function(event) {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    transcriptDiv.innerText = event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                    transcriptDiv.innerText = interimTranscript;
+                }
+            }
+        };
+
+        function toggleListening() {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        async function fetchHealthAdvice(message) {
+            console.log("Sending to AI:", message);
+            
+            try {
+                const response = await fetch('/chat-api/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                const aiResponse = data.response;
+                
+                // Show result
+                statusText.innerText = "Dr. AI Speaking...";
+                statusText.style.color = '#00ff88';
+                responseBox.style.display = 'block';
+                responseText.innerText = aiResponse;
+                
+                // Speak result
+                speak(aiResponse);
+                
+            } catch (error) {
+                console.error("Error:", error);
+                statusText.innerText = "Connection Error";
+            }
+        }
+
+        function speak(text) {
+            if (synth.speaking) {
+                console.error('speechSynthesis.speaking');
+                return;
+            }
+            // Strip markdown asterisks for cleaner speech
+            const cleanText = text.replace(/\*/g, '');
+            const utterThis = new SpeechSynthesisUtterance(cleanText);
+            
+            utterThis.onend = function (event) {
+                statusText.innerText = "Tap Mic to Speak";
+                statusText.style.color = '#0ff';
+            }
+            
+            utterThis.pitch = 1;
+            utterThis.rate = 1;
+            synth.speak(utterThis);
+        }
+    </script>
+</body>
+</html>

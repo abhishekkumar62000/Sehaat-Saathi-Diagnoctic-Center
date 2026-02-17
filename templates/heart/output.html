@@ -1,0 +1,106 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'front/neon_theme.css' %}">
+    <link rel="stylesheet" href="{% static 'heart/heart.css' %}" />
+</head>
+<body>
+    {% if pred == 1 %}
+        <div class="image">
+            <img src="{% static 'heart/goodHealth.jpg' %}" width="40%" border="2px black solid"/>
+        </div>
+        <div>
+            <h1>Great! You don't have heart disease.</h1>
+        </div>
+
+    {% elif pred == 0 %}
+        <div class="image">
+            <img src="{% static 'heart/sad.png' %}" width="40%" border="2px black solid"/>
+        </div>
+        <div>
+            <h1>Oops! You have a heart disease.</h1>
+        </div>
+
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'index' %}" class="btn btn-outline-primary">Home</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'download-report' %}" class="btn btn-outline-info">Download Report</a>
+        {% endif %}
+    </div>
+
+    <!-- HEALTH GUARDIAN WIDGET -->
+    <div class="container mt-5 mb-5">
+        <div class="card glass-card">
+            <div class="card-header border-0 text-center">
+                <h2 class="neon-text mb-0">🧬 Health Guardian: {{ health_choice.title }}</h2>
+                <p class="text-white-50">Personalized smart recovery and maintenance plan</p>
+                <span class="badge {% if health_choice.status == 'Safe' %}bg-success{% else %}bg-warning text-dark{% endif %} p-2">
+                    Status: {{ health_choice.status }}
+                </span>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-diet-tab" data-bs-toggle="pill" data-bs-target="#pills-diet" type="button" role="tab" aria-controls="pills-diet" aria-selected="true">🍎 Smart Diet</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-exercise-tab" data-bs-toggle="pill" data-bs-target="#pills-exercise" type="button" role="tab" aria-controls="pills-exercise" aria-selected="false">🏃 Fitness Plan</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-life-tab" data-bs-toggle="pill" data-bs-target="#pills-life" type="button" role="tab" aria-controls="pills-life" aria-selected="false">🧘 Lifestyle</button>
+                    </li>
+                </ul>
+                <div class="tab-content text-start p-3" id="pills-tabContent" style="background: rgba(0,0,0,0.3); border-radius: 10px;">
+                    <div class="tab-pane fade show active" id="pills-diet" role="tabpanel">
+                        <h4 class="text-info">Recommended Dietary Changes</h4>
+                        <ul class="list-group list-group-flush bg-transparent">
+                            {% for item in health_choice.diet %}
+                                <li class="list-group-item bg-transparent text-white border-bottom border-secondary">
+                                    <i class="fas fa-carrot text-success me-2"></i> {{ item }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="pills-exercise" role="tabpanel">
+                        <h4 class="text-info">Activity & Fitness Goals</h4>
+                        <ul class="list-group list-group-flush bg-transparent">
+                            {% for item in health_choice.exercise %}
+                                <li class="list-group-item bg-transparent text-white border-bottom border-secondary">
+                                    <i class="fas fa-running text-warning me-2"></i> {{ item }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="pills-life" role="tabpanel">
+                        <h4 class="text-info">Medical & Lifestyle Precautions</h4>
+                        <ul class="list-group list-group-flush bg-transparent">
+                            {% for item in health_choice.lifestyle %}
+                                <li class="list-group-item bg-transparent text-white border-bottom border-secondary">
+                                    <i class="fas fa-heartbeat text-danger me-2"></i> {{ item }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap JS needed for Tabs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% include 'chat_widget.html' %}
+</body>
+</html>
