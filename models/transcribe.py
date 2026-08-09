@@ -9,11 +9,11 @@ from django.core.files.storage import FileSystemStorage
 
 
 # Accessing the environment variables stored in .env file
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_KEY = config('AWS_SECRET_KEY')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_KEY = config('AWS_SECRET_KEY', default='')
 
-MY_REGION = config('MY_REGION')
-BUCKET_NAME = config('BUCKET_NAME')
+MY_REGION = config('MY_REGION', default='us-east-1')
+BUCKET_NAME = config('BUCKET_NAME', default='')
 
 LANG_CODE = 'en-AU'
 
