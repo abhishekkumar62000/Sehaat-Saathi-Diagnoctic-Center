@@ -1,5 +1,5 @@
-# Core Django packages for Railway deployment
-Django==4.0.1
+# Core Django packages for Railway/Render deployment
+Django>=4.2.0
 gunicorn>=21.0.0
 whitenoise>=6.0.0
 psycopg2-binary>=2.9.9
@@ -9,7 +9,6 @@ dj-database-url>=1.0.0
 # Django extensions
 django-crispy-forms>=1.14.0
 crispy-bootstrap5>=0.7
-django-heroku>=0.3.1
 
 # AWS/Cloud services
 boto3>=1.26.0
