@@ -1,10 +1,16 @@
 import random
 import os
-from openai import OpenAI
 from decouple import config
 
+# Safe optional import of openai
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OpenAI = None
+    OPENAI_AVAILABLE = False
+
 # Retrieve API key from environment variables using decouple for .env file support
-# Fallback to os.getenv properly in case decouple fails or for standard usage
 try:
     OPENAI_API_KEY = config('OPENAI_API_KEY', default=None)
 except:
@@ -28,7 +34,7 @@ def get_health_advice(user_input, context, chat_history=None):
     # ------------------------------------------------------------------
     # IMPLEMENTATION OPTION 1: REAL LLM (OpenAI) - PRIMARY
     # ------------------------------------------------------------------
-    if OPENAI_API_KEY:
+    if OPENAI_AVAILABLE and OPENAI_API_KEY:
         try:
             client = OpenAI(api_key=OPENAI_API_KEY)
             

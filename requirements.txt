@@ -1,4 +1,4 @@
-# Core Django packages for Railway/Render deployment
+# Core Django packages for Render deployment
 Django>=4.2.0
 gunicorn>=21.0.0
 whitenoise>=6.0.0
@@ -10,11 +10,21 @@ dj-database-url>=1.0.0
 django-crispy-forms>=1.14.0
 crispy-bootstrap5>=0.7
 
+# AI / OpenAI
+openai>=1.0.0
+
+# PDF generation
+xhtml2pdf>=0.2.11
+reportlab>=4.0.0
+
+# QR Code generation
+qrcode>=7.4.2
+
 # AWS/Cloud services
 boto3>=1.26.0
 botocore>=1.29.0
 
-# Data processing (versions with py3.11 wheels)
+# Data processing
 pillow>=9.5.0
 pandas>=1.5.0
 numpy>=1.24.0
