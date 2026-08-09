@@ -1,4 +1,5 @@
-## Project Name : Apna Doctor - An AI based Health-CheckUp Web Tool
+## Project Name : Sehaat Saathi Diagnoctic Center
+# live App:- https://sehaat-saathi-diagnoctic-center.onrender.com/
 
 ## Theme : Healthcare
 
