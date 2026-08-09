@@ -27,48 +27,48 @@ if TORCH_AVAILABLE:
 
             padding = 1
             ks = 3
-        # Encoding Part of Network
-        #   Block 1
-        self.conv1_1 = nn.Conv2d(input_channels, filters[0], kernel_size=ks, padding=padding)
-        self.conv1_2 = nn.Conv2d(filters[0], filters[0], kernel_size=ks, padding=padding)
-        self.maxpool1 = nn.MaxPool2d(2)
-        #   Block 2
-        self.conv2_1 = nn.Conv2d(filters[0], filters[1], kernel_size=ks, padding=padding)
-        self.conv2_2 = nn.Conv2d(filters[1], filters[1], kernel_size=ks, padding=padding)
-        self.maxpool2 = nn.MaxPool2d(2)
-        #   Block 3
-        self.conv3_1 = nn.Conv2d(filters[1], filters[2], kernel_size=ks, padding=padding)
-        self.conv3_2 = nn.Conv2d(filters[2], filters[2], kernel_size=ks, padding=padding)
-        self.maxpool3 = nn.MaxPool2d(2)
-        #   Block 4
-        self.conv4_1 = nn.Conv2d(filters[2], filters[3], kernel_size=ks, padding=padding)
-        self.conv4_2 = nn.Conv2d(filters[3], filters[3], kernel_size=ks, padding=padding)
-        self.maxpool4 = nn.MaxPool2d(2)
-        
-        # Bottleneck Part of Network.
-        self.conv5_1 = nn.Conv2d(filters[3], filters[4], kernel_size=ks, padding=padding)
-        self.conv5_2 = nn.Conv2d(filters[4], filters[4], kernel_size=ks, padding=padding)
-        self.conv5_t = nn.ConvTranspose2d(filters[4], filters[3], 2, stride=2)
+            # Encoding Part of Network
+            #   Block 1
+            self.conv1_1 = nn.Conv2d(input_channels, filters[0], kernel_size=ks, padding=padding)
+            self.conv1_2 = nn.Conv2d(filters[0], filters[0], kernel_size=ks, padding=padding)
+            self.maxpool1 = nn.MaxPool2d(2)
+            #   Block 2
+            self.conv2_1 = nn.Conv2d(filters[0], filters[1], kernel_size=ks, padding=padding)
+            self.conv2_2 = nn.Conv2d(filters[1], filters[1], kernel_size=ks, padding=padding)
+            self.maxpool2 = nn.MaxPool2d(2)
+            #   Block 3
+            self.conv3_1 = nn.Conv2d(filters[1], filters[2], kernel_size=ks, padding=padding)
+            self.conv3_2 = nn.Conv2d(filters[2], filters[2], kernel_size=ks, padding=padding)
+            self.maxpool3 = nn.MaxPool2d(2)
+            #   Block 4
+            self.conv4_1 = nn.Conv2d(filters[2], filters[3], kernel_size=ks, padding=padding)
+            self.conv4_2 = nn.Conv2d(filters[3], filters[3], kernel_size=ks, padding=padding)
+            self.maxpool4 = nn.MaxPool2d(2)
+            
+            # Bottleneck Part of Network.
+            self.conv5_1 = nn.Conv2d(filters[3], filters[4], kernel_size=ks, padding=padding)
+            self.conv5_2 = nn.Conv2d(filters[4], filters[4], kernel_size=ks, padding=padding)
+            self.conv5_t = nn.ConvTranspose2d(filters[4], filters[3], 2, stride=2)
 
-        # Decoding Part of Network
-        #   Block 4
-        self.conv6_1 = nn.Conv2d(filters[4], filters[3], kernel_size=ks, padding=padding)
-        self.conv6_2 = nn.Conv2d(filters[3], filters[3], kernel_size=ks, padding=padding)
-        self.conv6_t = nn.ConvTranspose2d(filters[3], filters[2], 2, stride=2)
-        #   Block 3
-        self.conv7_1 = nn.Conv2d(filters[3], filters[2], kernel_size=ks, padding=padding)
-        self.conv7_2 = nn.Conv2d(filters[2], filters[2], kernel_size=ks, padding=padding)
-        self.conv7_t = nn.ConvTranspose2d(filters[2], filters[1], 2, stride=2)
-        #   Block 2
-        self.conv8_1 = nn.Conv2d(filters[2], filters[1], kernel_size=ks, padding=padding)
-        self.conv8_2 = nn.Conv2d(filters[1], filters[1], kernel_size=ks, padding=padding)
-        self.conv8_t = nn.ConvTranspose2d(filters[1], filters[0], 2, stride=2)
-        #   Block 1
-        self.conv9_1 = nn.Conv2d(filters[1], filters[0], kernel_size=ks, padding=padding)
-        self.conv9_2 = nn.Conv2d(filters[0], filters[0], kernel_size=ks, padding=padding)
+            # Decoding Part of Network
+            #   Block 4
+            self.conv6_1 = nn.Conv2d(filters[4], filters[3], kernel_size=ks, padding=padding)
+            self.conv6_2 = nn.Conv2d(filters[3], filters[3], kernel_size=ks, padding=padding)
+            self.conv6_t = nn.ConvTranspose2d(filters[3], filters[2], 2, stride=2)
+            #   Block 3
+            self.conv7_1 = nn.Conv2d(filters[3], filters[2], kernel_size=ks, padding=padding)
+            self.conv7_2 = nn.Conv2d(filters[2], filters[2], kernel_size=ks, padding=padding)
+            self.conv7_t = nn.ConvTranspose2d(filters[2], filters[1], 2, stride=2)
+            #   Block 2
+            self.conv8_1 = nn.Conv2d(filters[2], filters[1], kernel_size=ks, padding=padding)
+            self.conv8_2 = nn.Conv2d(filters[1], filters[1], kernel_size=ks, padding=padding)
+            self.conv8_t = nn.ConvTranspose2d(filters[1], filters[0], 2, stride=2)
+            #   Block 1
+            self.conv9_1 = nn.Conv2d(filters[1], filters[0], kernel_size=ks, padding=padding)
+            self.conv9_2 = nn.Conv2d(filters[0], filters[0], kernel_size=ks, padding=padding)
 
-        # Output Part of Network.
-        self.conv10 = nn.Conv2d(filters[0], output_channels, kernel_size=ks, padding=padding)
+            # Output Part of Network.
+            self.conv10 = nn.Conv2d(filters[0], output_channels, kernel_size=ks, padding=padding)
 
     def forward(self, x):
         # Encoding Part of Network
@@ -116,7 +116,6 @@ if TORCH_AVAILABLE:
         # Output Part of Network
         output = F.sigmoid(self.conv10(conv9))         
         return output
-    
 
     class BrainTumorClassifier():
         def __init__(self, model, device):
