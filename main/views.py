@@ -320,13 +320,13 @@ def kidneyPred(request):
                 'chat_data': f"BP: {bp}, Glucose: {bgr}, Creatinine: {sc}, Hemo: {hemo}",
                 # 'health_choice': get_health_plan('Kidney Disease', pred) # If implemented
             }
-            return render(request, 'kidney/output.html', context)
+            return render(request, 'Kidney/output.html', context)
 
         except Exception as e:
             print(f"Kidney Pred Error: {e}")
-            return render(request, 'kidney/index.html', {'error': 'Invalid Input'})
+            return render(request, 'Kidney/index.html', {'error': 'Invalid Input'})
 
-    return render(request, 'kidney/index.html')
+    return render(request, 'Kidney/index.html')
 
 def liver(request):
     return render(request , 'liver/index.html')
@@ -374,7 +374,7 @@ def liverPred(request):
         redirect('liver/')
 
 def cancer(request):
-    return render(request , 'cancer/cancer.html')
+    return render(request , 'Cancer/Cancer.html')
 
 def cancerPred(request):
     if request.method == 'POST':
@@ -400,7 +400,7 @@ def cancerPred(request):
             'chat_data': f"Mean Radius: {features[0]}, Mean Texture: {features[1]}",
             'health_choice': get_health_plan('Breast Cancer', pred)
         }
-        return render(request , 'cancer/output.html' , context)
+        return render(request , 'Cancer/output.html' , context)
     
     else:
         redirect('cancer/')
@@ -439,7 +439,7 @@ def alzheimerPred(request):
         return JsonResponse(context)
     
     else:
-        return render(request , 'alzheimer/Alzheimer.html')
+        return render(request , 'alzheimer/alzheimer.html')
 
 def covidPred(request):
     if request.method == 'POST'and request.FILES['image']:
@@ -475,7 +475,7 @@ def covidPred(request):
         return JsonResponse(context)
     
     else:
-        return render(request , 'covid/covid.html')
+        return render(request , 'Covid/Covid.html')
 
 def brainPred(request):
     if request.method == 'POST'and request.FILES['image']:
@@ -550,7 +550,7 @@ def malariaPred(request):
         return JsonResponse(context)
     
     else:
-        return render(request , 'malaria/malaria.html')     
+        return render(request , 'Malaria/Malaria.html')     
 
 def glaucomaPred(request):
     if request.method == 'POST'and request.FILES['image']:

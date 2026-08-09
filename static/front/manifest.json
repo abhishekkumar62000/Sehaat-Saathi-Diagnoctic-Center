@@ -1,0 +1,43 @@
+{
+  "name": "Sehaat Saathi - AI Health Diagnosis",
+  "short_name": "Sehaat Saathi",
+  "description": "AI-powered diagnostic center for disease prediction and health monitoring",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001f3f",
+  "theme_color": "#00e5ff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    {
+      "src": "/static/front/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/front/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Diabetes Test",
+      "short_name": "Diabetes",
+      "description": "Check diabetes risk",
+      "url": "/diabetes/",
+      "icons": [{ "src": "/static/front/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Heart Disease Test",
+      "short_name": "Heart",
+      "description": "Check heart disease risk",
+      "url": "/heart-disease/",
+      "icons": [{ "src": "/static/front/logo-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

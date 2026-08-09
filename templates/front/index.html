@@ -28,11 +28,31 @@
     <!-- Favicon -->
     <link
       rel="shortcut icon"
-      href="{% static 'front/medical-checkup.png' %}"
+      href="{% static 'front/logo-192.png' %}"
       type="image/png"
     />
 
+    <!-- PWA: Make app installable on mobile -->
+    <link rel="manifest" href="{% static 'front/manifest.json' %}">
+    <meta name="theme-color" content="#00e5ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sehaat Saathi">
+    <link rel="apple-touch-icon" href="{% static 'front/logo-192.png' %}">
+
     <title>Sehaat Saathi - AI Health Diagnosis</title>
+
+    <script>
+      // Register Service Worker for PWA installability
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
 
     <style>
       #bg-image {
