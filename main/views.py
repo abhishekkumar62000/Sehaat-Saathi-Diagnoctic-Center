@@ -11,7 +11,10 @@ import json
 import base64
 import random
 import time
-import boto3
+try:
+    import boto3
+except ImportError:
+    boto3 = None
 import numpy as np
 from PIL import Image
 from django.template.loader import get_template
@@ -22,21 +25,34 @@ import qrcode
 from io import BytesIO
 from main.roadmap_logic import get_roadmap_data
 
-# Optional ML imports - wrapped to allow frontend to work without them
+# ── Step 1: Load disease classifiers (sklearn/pickle based - work WITHOUT torch/tensorflow)
 try:
-    import cv2
-    import torch
-    from models.classifiers import (predict_malaria, predict_liverD, predict_heartD, predict_alzheimer, 
-    predict_diabetes, predict_cancerB, predict_glaucoma, predict_covid, predict_brain, localizeTumor, predict_disease)
-    from models.transcribe import get_text
+    from models.classifiers import (predict_malaria, predict_liverD, predict_heartD, predict_alzheimer,
+        predict_diabetes, predict_cancerB, predict_glaucoma, predict_covid, predict_brain,
+        localizeTumor, predict_disease)
     ML_AVAILABLE = True
-except (ImportError, ModuleNotFoundError):
+except Exception as e:
+    print(f"Warning: Could not load classifiers: {e}")
     ML_AVAILABLE = False
-    # Dummy functions when ML is not available
     predict_malaria = predict_liverD = predict_heartD = predict_alzheimer = None
     predict_diabetes = predict_cancerB = predict_glaucoma = predict_covid = None
     predict_brain = localizeTumor = predict_disease = None
+
+# ── Step 2: Load transcribe (AWS - optional, needs boto3)
+try:
+    from models.transcribe import get_text
+except Exception:
     get_text = None
+
+# ── Step 3: Optional heavy ML deps (torch, cv2) - NOT required for disease prediction
+try:
+    import cv2
+except ImportError:
+    cv2 = None
+try:
+    import torch
+except ImportError:
+    torch = None
 
 # Create your views here
 def features_hub(request):
@@ -192,6 +208,8 @@ def heartPred(request):
     if request.method == 'POST':
         features = list(request.POST.dict().values())[1:]
         features = list(map(float , features))
+        if predict_heartD is None:
+            return JsonResponse({'error': 'Heart disease model not available on server. Please run locally.'}, status=503)
         pred = predict_heartD(np.array([features]))
         
         if request.user.is_authenticated:
@@ -229,6 +247,8 @@ def diabetes(request):
 def diabetesPred(request):
     if request.method == 'POST':
         features = list(request.POST.dict().values())[1:]
+        if predict_diabetes is None:
+            return JsonResponse({'error': 'Diabetes model not available on server. Please run locally.'}, status=503)
         pred = predict_diabetes(np.array([features]))
         
         if request.user.is_authenticated:
@@ -316,6 +336,8 @@ def liverPred(request):
         features = list(request.POST.dict().values())[1:]
         out_features = request.POST.dict()
         print(out_features)
+        if predict_liverD is None:
+            return JsonResponse({'error': 'Liver model not available on server. Please run locally.'}, status=503)
         pred = predict_liverD(np.array([features]))
         
         if request.user.is_authenticated:
@@ -357,6 +379,8 @@ def cancer(request):
 def cancerPred(request):
     if request.method == 'POST':
         features = list(request.POST.dict().values())[1:]
+        if predict_cancerB is None:
+            return JsonResponse({'error': 'Cancer model not available on server. Please run locally.'}, status=503)
         pred = predict_cancerB(np.array([features]))
 
         if request.user.is_authenticated:
@@ -392,6 +416,8 @@ def alzheimerPred(request):
         file_path = os.path.join(settings.MEDIA_ROOT, img.name)
 
         img = Image.open(img).convert("RGB").resize((224, 224))
+        if predict_alzheimer is None:
+            return JsonResponse({'error': 'Alzheimer model not available on server. Please run locally.'}, status=503)
         label , cam_path = predict_alzheimer(img , file_path , file_path.replace(".jpg", "") + "_camViz.jpg")
 
         if request.user.is_authenticated:
@@ -426,6 +452,8 @@ def covidPred(request):
         file_path = os.path.join(settings.MEDIA_ROOT, img.name)
 
         img = Image.open(img).resize((299, 299))
+        if predict_covid is None:
+            return JsonResponse({'error': 'Covid model not available on server. Please run locally.'}, status=503)
         label , cam_path = predict_covid(img , file_path , file_path.replace(".png", "") + "_camViz.jpg")
 
         if request.user.is_authenticated:
@@ -460,6 +488,8 @@ def brainPred(request):
         file_path = os.path.join(settings.MEDIA_ROOT, img.name)
 
         img = Image.open(img).resize((224, 224))
+        if predict_brain is None:
+            return JsonResponse({'error': 'Brain tumor model not available on server. Please run locally.'}, status=503)
         label = predict_brain(img)
         
         if request.user.is_authenticated:
@@ -502,6 +532,8 @@ def malariaPred(request):
         file_url = fss.url(file)
 
         img = Image.open(img_file).convert("RGB").resize((100, 100))
+        if predict_malaria is None:
+            return JsonResponse({'error': 'Malaria model not available on server. Please run locally.'}, status=503)
         label = predict_malaria(img)
         
         if request.user.is_authenticated:
@@ -529,6 +561,8 @@ def glaucomaPred(request):
         file_url = fss.url(file)
 
         img = Image.open(img_file).convert("RGB").resize((300, 300))
+        if predict_glaucoma is None:
+            return JsonResponse({'error': 'Glaucoma model not available on server. Please run locally.'}, status=503)
         label = predict_glaucoma(img)
         
         if request.user.is_authenticated:
@@ -589,6 +623,8 @@ def symptomsDis(request):
         values = list(request.POST.dict().values())
         user_symptoms = values[:-1]
         days = int(values[-1])
+        if predict_disease is None:
+            return JsonResponse({'error': 'Symptom checker not available on server.'}, status=503)
         advice, output = predict_disease(user_symptoms , days)
         context = {
             "advice":advice,
@@ -605,6 +641,8 @@ def symptomsDis(request):
 
         text = get_text(file_path , file_name)
         out = re.findall("[a-zA-Z]+", text)
+        if predict_disease is None:
+            return JsonResponse({'error': 'Symptom checker not available on server.'}, status=503)
         advice, output = predict_disease(out)
         print(advice , output)
         context = {
