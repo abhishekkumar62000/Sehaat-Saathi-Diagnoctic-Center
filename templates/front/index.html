@@ -242,10 +242,11 @@
       <div class="navbar-fixed">
         <nav>
           <div class="nav-wrapper" style="padding: 0 15px;">
-            <a href="{% url 'index' %}" class="brand-logo" style="display: flex; align-items: center; height: 100%; text-decoration: none; font-size: clamp(1.2rem, 4vw, 1.8rem);">
-              <span style="font-family: 'Arial Black', 'Segoe UI', sans-serif; font-weight: 900; letter-spacing: 2px; white-space: nowrap;">
-                <span style="color: #FF8C00; display: inline-block; animation: glow-pulse-orange 2s ease-in-out infinite;">SEHAAT</span>
-                <span style="color: #22C55E; display: inline-block; margin-left: 8px; animation: glow-pulse-green 2s ease-in-out infinite;">SAATHI</span>
+        <a href="{% url 'index' %}" class="brand-logo" style="display: flex; align-items: center; height: 100%; text-decoration: none; gap: 10px; padding: 0;">
+              <img src="{% static 'front/Logo.png' %}" class="nav-logo" alt="Sehaat Saathi Logo" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #00f3ff;box-shadow:0 0 12px rgba(0,243,255,0.5);flex-shrink:0;">
+              <span class="brand-name" style="font-family:'Outfit',sans-serif;font-weight:900;letter-spacing:1.5px;white-space:nowrap;display:flex;align-items:center;gap:4px;font-size:clamp(0.95rem,4vw,1.35rem);">
+                <span class="part-orange" style="color:#FF8C00;animation:glow-pulse-orange 2.5s ease-in-out infinite;">SEHAAT</span>
+                <span class="part-green" style="color:#22C55E;animation:glow-pulse-green 2.5s ease-in-out infinite 0.5s;">SAATHI</span>
               </span>
             </a>
             <a href="" class="sidenav-trigger right" data-target="mobile-links" style="padding: 0 15px;">
@@ -285,6 +286,18 @@
       </div>
 
       <ul class="sidenav" id="mobile-links">
+        <!-- Premium Sidenav Header -->
+        <li>
+          <div class="sidenav-header">
+            <img src="{% static 'front/Logo.png' %}" alt="Logo" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #00f3ff;box-shadow:0 0 15px rgba(0,243,255,0.4);">
+            <div class="sidenav-header-text">
+              <div class="app-title" style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;line-height:1.2;">
+                <span class="s1" style="color:#FF8C00;">SEHAAT</span> <span class="s2" style="color:#22C55E;">SAATHI</span>
+              </div>
+              <div class="app-sub" style="font-size:0.72rem;color:#a0a0b0;margin-top:3px;">AI Health Diagnosis</div>
+            </div>
+          </div>
+        </li>
         <li><a href="{% url 'index' %}"><i class="material-icons left">home</i>Home</a></li>
         <li><a href="#about-team"><i class="material-icons left">info</i>About</a></li>
         <li class="divider"></li>
@@ -292,11 +305,64 @@
         <li class="divider"></li>
         <li><a href="{% url 'lab-analyzer' %}"><i class="material-icons left">assignment</i>Lab Analyzer</a></li>
         <li><a href="{% url 'know-your-disease' %}"><i class="material-icons left">local_hospital</i>Know Your Disease</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'dashboard' %}"><i class="material-icons left">bar_chart</i>Dashboard</a></li>
+        <li><a href="{% url 'logout' %}"><i class="material-icons left">logout</i>Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}"><i class="material-icons left">login</i>Login / Register</a></li>
+        {% endif %}
         <li class="divider"></li>
-        <li><a href="https://sehaat-saathi.vercel.app/" target="_blank"><i class="material-icons left">public</i>Live Website</a></li>
+        <div class="sidenav-section-title">🏥 Diseases</div>
+        <li class="disease-link"><a href="{% url 'diabetes-view' %}"><i class="material-icons left">bloodtype</i>Diabetes</a></li>
+        <li class="disease-link"><a href="{% url 'heart-disease-view' %}"><i class="material-icons left">favorite</i>Heart Disease</a></li>
+        <li class="disease-link"><a href="{% url 'liver-view' %}"><i class="material-icons left">healing</i>Liver Disease</a></li>
+        <li class="disease-link"><a href="{% url 'cancer-view' %}"><i class="material-icons left">coronavirus</i>Breast Cancer</a></li>
+        <li class="disease-link"><a href="{% url 'alzheimer-predict' %}"><i class="material-icons left">psychology</i>Alzheimer</a></li>
+        <li class="disease-link"><a href="{% url 'brain-tumor-predict' %}"><i class="material-icons left">biotech</i>Brain Tumor</a></li>
+        <li class="disease-link"><a href="{% url 'malaria-predict' %}"><i class="material-icons left">bug_report</i>Malaria</a></li>
+        <li class="disease-link"><a href="{% url 'glaucoma-predict' %}"><i class="material-icons left">visibility</i>Glaucoma</a></li>
+        <li class="disease-link"><a href="{% url 'covid-predict' %}"><i class="material-icons left">masks</i>Covid-19</a></li>
+        <li class="divider"></li>
+        <li><a href="https://sehaat-saathi-diagnoctic-center.onrender.com" target="_blank" style="color:#FF8C00 !important;"><i class="material-icons left">public</i>Live Website</a></li>
       </ul>
 
-      <section id="bg-image"></section>
+      <section id="bg-image">
+        <!-- Hero Content Overlay -->
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            AI-Powered • Free • Instant Results
+          </div>
+          <h1 class="hero-title">
+            <span class="highlight-orange">Sehaat</span>
+            <span class="highlight-green"> Saathi</span><br>
+            <span class="highlight-blue" style="font-size:0.6em;font-weight:600;letter-spacing:0px;">Your AI Health Partner</span>
+          </h1>
+          <p class="hero-subtitle">Diagnose 10+ diseases instantly with AI. Free, accurate &amp; trusted by thousands.</p>
+          <div class="hero-ctas">
+            <a href="{% url 'know-your-disease' %}" class="hero-btn-primary">
+              🔬 Start Diagnosis
+            </a>
+            <a href="{% url 'features-hub' %}" class="hero-btn-secondary">
+              ✨ Features
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="stat-value">10+</div>
+              <div class="stat-label">Diseases</div>
+            </div>
+            <div class="hero-stat">
+              <div class="stat-value">AI</div>
+              <div class="stat-label">Powered</div>
+            </div>
+            <div class="hero-stat">
+              <div class="stat-value">Free</div>
+              <div class="stat-label">Always</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </header>
 
     <!-- Live Website Banner - Mobile Friendly -->
